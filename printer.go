@@ -6,7 +6,7 @@ import (
 
 // BindPrinter 将打印机绑定到当前的应用id。
 func (c *Client) BindPrinter(accesstoken, device_id, code string) (p Resp, err error) {
-	return PostFormRequest(HOST+"/sys/BindPrinter", map[string]interface{}{
+	return c.postFormRequest(HOST+"/sys/BindPrinter", map[string]interface{}{
 		"app_id":       c.appid,
 		"access_token": accesstoken,
 		"device_codes": device_id + "#" + code,
@@ -15,7 +15,7 @@ func (c *Client) BindPrinter(accesstoken, device_id, code string) (p Resp, err e
 
 // BindPrinter 从当前应用id中解除绑定的打印机。
 func (c *Client) UnBindPrinter(accesstoken, device_id string) (p Resp, err error) {
-	return PostFormRequest(HOST+"/sys/UnBindPrinter", map[string]interface{}{
+	return c.postFormRequest(HOST+"/sys/UnBindPrinter", map[string]interface{}{
 		"app_id":       c.appid,
 		"access_token": accesstoken,
 		"device_id":    device_id,
@@ -24,7 +24,7 @@ func (c *Client) UnBindPrinter(accesstoken, device_id string) (p Resp, err error
 
 // CheckPrinterEnableBind 校验打印机是否可以绑定。
 func (c *Client) CheckPrinterEnableBind(accesstoken, device_id string) (p Resp, err error) {
-	return PostFormRequest(HOST+"/sys/CheckPrinterEnableBind", map[string]interface{}{
+	return c.postFormRequest(HOST+"/sys/CheckPrinterEnableBind", map[string]interface{}{
 		"app_id":       c.appid,
 		"access_token": accesstoken,
 		"device_id":    device_id,
@@ -50,7 +50,7 @@ type Printer struct {
 
 // QueryPrinterInfo 查询打印机的基础信息，包括当前的软件、固件版本以及打印机型号。
 func (c *Client) QueryPrinterInfo(accesstoken, device_id string) (p Printer, err error) {
-	resp, err := GetRequest(fmt.Sprintf("%s/sys/QueryPrinterInfo?app_id=%s&access_token=%d&device_id=%s", HOST, c.appid, accesstoken, device_id))
+	resp, err := c.getRequest(fmt.Sprintf("%s/sys/QueryPrinterInfo?app_id=%s&access_token=%s&device_id=%s", HOST, c.appid, accesstoken, device_id))
 	if err != nil {
 		return p, err
 	}
@@ -69,7 +69,7 @@ type PrinterStatus struct {
 
 // QueryPrinterStatus 查询打印机的当前状态，包括打印机是否在线，是否缺纸，是否开盖等。
 func (c *Client) QueryPrinterStatus(accesstoken, device_id string) (p PrinterStatus, err error) {
-	resp, err := GetRequest(fmt.Sprintf("%s/sys/QueryPrinterStatus?app_id=%s&access_token=%d&device_id=%s", HOST, c.appid, accesstoken, device_id))
+	resp, err := c.getRequest(fmt.Sprintf("%s/sys/QueryPrinterStatus?app_id=%s&access_token=%s&device_id=%s", HOST, c.appid, accesstoken, device_id))
 	if err != nil {
 		return p, err
 	}

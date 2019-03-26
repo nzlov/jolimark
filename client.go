@@ -5,6 +5,8 @@ import (
 	"io"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 var HOST = "https://mcp.jolimark.com/mcp/v2"
@@ -13,6 +15,7 @@ type Client struct {
 	appid       string
 	key         string
 	callbackkey string
+	log         *logrus.Logger
 }
 
 func NewClient(appid, key, callbackkey string) *Client {
@@ -23,10 +26,14 @@ func NewClient(appid, key, callbackkey string) *Client {
 	}
 }
 
+func (c *Client) SetLog(l *logrus.Logger) {
+	c.log = l
+}
+
 type AccessToken struct {
 	AccessToken string `json:"access_token"`
 	// 有效时间，单位为秒
-	Expire int64 `json:"expires_in"`
+	Expire float64 `json:"expires_in"`
 	// 生成时间
 	Create string `json:"create_time"`
 }
@@ -43,7 +50,7 @@ func accesstokenSign(appid, key string, timestamp int64) string {
 // AccessToken 获取AccessToken
 func (c *Client) AccessToken() (token AccessToken, err error) {
 	t := time.Now().Unix()
-	resp, err := GetRequest(fmt.Sprintf("%s/sys/GetAccessToken?app_id=%s&time_stamp=%d&sign=%s&sign_type=MD5", HOST, c.appid, t, accesstokenSign(c.appid, c.key, t)))
+	resp, err := c.getRequest(fmt.Sprintf("%s/sys/GetAccessToken?app_id=%s&time_stamp=%d&sign=%s&sign_type=MD5", HOST, c.appid, t, accesstokenSign(c.appid, c.key, t)))
 	if err != nil {
 		return token, err
 	}
