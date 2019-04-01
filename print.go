@@ -194,7 +194,7 @@ func (c *Client) PrintExpress(accesstoken, device_ids, cus_orderid, template_id,
 // PrintHtmlTemplate 打印云模板
 // 用户创建打印模板
 // 打印用户在映美云模板上的排版设计页面。映美云模板地址： http://form.jolimark.com
-func (c *Client) PrintHtmlTemplate(accesstoken, device_ids, cus_orderid, template_id, bill_content string, copies, paper_width, paper_height, paper_type, time_out int) (resp Resp, err error) {
+func (c *Client) PrintHtmlTemplate(accesstoken, device_ids, cus_orderid, template_id, bill_content string, copies, paper_type, time_out int) (resp Resp, err error) {
 	return c.postFormRequest(HOST+"/sys/PrintHtmlTemplate", map[string]interface{}{
 		"app_id":       c.appid,
 		"access_token": accesstoken,
@@ -203,8 +203,6 @@ func (c *Client) PrintHtmlTemplate(accesstoken, device_ids, cus_orderid, templat
 		"copies":       copies,
 		"cus_orderid":  cus_orderid,
 		"bill_content": bill_content,
-		"paper_width":  paper_width,
-		"paper_height": paper_height,
 		"paper_type":   paper_type,
 		"time_out":     time_out,
 		//"sign_type":    "MD5",
