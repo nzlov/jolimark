@@ -24,6 +24,11 @@ func (t TaskResult) check(key string) bool {
 	return t.Sign == MD5(fmt.Sprintf("bill_no=%s&nonce_str=%s&printer_code=%s&result_code=%s&sign_type=MD5&time_stamp=%s&key=%s", t.BillNo, t.NonceStr, t.PrinterCode, t.ResultCode, t.Timestamp, key))
 }
 
+//TaskCallbackVerify
+func (c *Client) TaskCallbackVerify(result TaskResult) bool {
+	return result.check(c.callbackkey)
+}
+
 // TaskCallback 打印任务结果回调更新
 func (c *Client) TaskCallback(callback func(TaskResult) error) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -74,6 +79,11 @@ func (t DeviceStatus) check(key string) bool {
 	return t.Sign == MD5(fmt.Sprintf("fault_time=%s&nonce_str=%s&printer_code=%s&result_code=%s&sign_type=MD5&time_stamp=%s&key=%s", t.FaultTime, t.NonceStr, t.PrinterCode, t.ResultCode, t.Timestamp, key))
 }
 
+//DeviceStatusCallbackVerify
+func (c *Client) DeviceStatusCallbackVerify(device DeviceStatus) bool {
+	return device.check(c.callbackkey)
+}
+
 // DeviceStatusCallback 打印设备状态回调更新
 func (c *Client) DeviceStatusCallback(callback func(DeviceStatus) error) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +94,7 @@ func (c *Client) DeviceStatusCallback(callback func(DeviceStatus) error) func(w 
 		}
 
 		result := DeviceStatus{
-			FaultTime:      r.FormValue("fault_time"),
+			FaultTime:   r.FormValue("fault_time"),
 			PrinterCode: r.FormValue("printer_code"),
 			ResultCode:  r.FormValue("result_code"),
 			Timestamp:   r.FormValue("time_stamp"),
