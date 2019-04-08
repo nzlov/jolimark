@@ -54,6 +54,11 @@ func (c *Client) QueryPrinterInfo(accesstoken, device_id string) (p Printer, err
 	if err != nil {
 		return p, err
 	}
+
+	if resp.Code != 0 {
+		return p, Error{Code: resp.Code}
+	}
+
 	err = resp.Decode(&p)
 	return
 }
@@ -73,6 +78,11 @@ func (c *Client) QueryPrinterStatus(accesstoken, device_id string) (p PrinterSta
 	if err != nil {
 		return p, err
 	}
+
+	if resp.Code != 0 {
+		return p, Error{Code: resp.Code}
+	}
+
 	err = resp.Decode(&p)
 	return
 }

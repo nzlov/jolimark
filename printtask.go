@@ -17,6 +17,11 @@ func (c *Client) QueryPrintTaskStatus(accesstoken, cus_orderid string) (p PrintT
 	if err != nil {
 		return p, err
 	}
+
+	if resp.Code != 0 {
+		return p, Error{Code: resp.Code}
+	}
+
 	err = resp.Decode(&p)
 	return
 }
@@ -42,6 +47,11 @@ func (c *Client) QueryNotPrintTask(accesstoken, device_id string) (p PrintTaskSt
 	if err != nil {
 		return p, err
 	}
+
+	if resp.Code != 0 {
+		return p, Error{Code: resp.Code}
+	}
+
 	err = resp.Decode(&p)
 	return
 }
@@ -56,6 +66,11 @@ func (c *Client) CancelNotPrintTask(accesstoken, device_id string) (p NotPrintTa
 	if err!=nil{
 		return p ,err
 	}
+
+	if resp.Code != 0 {
+		return p, Error{Code: resp.Code}
+	}
+
 	err = resp.Decode(&p)
 	return
 }
